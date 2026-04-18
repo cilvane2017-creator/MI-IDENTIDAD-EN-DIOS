@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Identidad en Dios</title>
+<style>
+    body {
+        font-family: 'Comic Sans MS', cursive;
+        background: linear-gradient(135deg, #a8edea, #fed6e3);
+        text-align: center;
+        padding: 20px;
+    }
+    h1 { color: #6a1b9a; }
+    .card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 600px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    input { padding: 10px; margin: 5px; border-radius: 10px; }
+    button {
+        background: #ff9800;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        color: white;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(6, 40px);
+        justify-content: center;
+        gap: 5px;
+    }
+    .cell {
+        width: 40px;
+        height: 40px;
+        background: #fff;
+        border: 2px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .selected { background: #81c784; color: white; }
+
+    .memory-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 80px);
+        gap: 10px;
+        justify-content: center;
+    }
+    .card-memory {
+        background: #64b5f6;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .hidden { background: #90caf9; color: transparent; }
+</style>
+</head>
+<body>
+
+<h1>MI IDENTIDAD EN DIOS</h1>
+<p><strong>Lo que Dios dice de ti</strong></p>
+
+<div class="card">
+<h2>Completa el versículo</h2>
+<p><strong>✍️ INDICACIÓN:</strong> Completa las palabras que faltan.</p>
+<p>Mas vosotros sois ______ escogido, real ________, nación ______, pueblo adquirido por Dios.</p>
+<input id="v1" placeholder="Palabra 1">
+<input id="v2" placeholder="Palabra 2">
+<input id="v3" placeholder="Palabra 3">
+<br><br>
+<button onclick="verificarVersiculo()">Verificar</button>
+<p id="resultado"></p>
+</div>
+
+<div class="card">
+<h2>Sopa de letras</h2>
+<p><strong>🔍 INDICACIÓN:</strong> Encuentra las palabras tocando las letras.</p>
+<div class="grid" id="sopa"></div>
+<p>Busca: AMOR, DIOS, HIJO</p>
+</div>
+
+<div class="card">
+<h2>Juego de Memoria</h2>
+<p><strong>🧠 INDICACIÓN:</strong> Descubre las parejas iguales.</p>
+<div class="memory-grid" id="memory"></div>
+</div>
+
+<div class="card">
+<h2>¿Quién soy en Cristo?</h2>
+<p><strong>✨ INDICACIÓN:</strong> Presiona el botón para descubrir quién eres en Dios.</p>
+<button onclick="mostrarFrase()">Descubrir</button>
+<p id="frase"></p>
+</div>
+
+<script>
+function verificarVersiculo() {
+    let v1 = document.getElementById('v1').value.toLowerCase();
+    let v2 = document.getElementById('v2').value.toLowerCase();
+    let v3 = document.getElementById('v3').value.toLowerCase();
+
+    if(v1 === 'linaje' && v2 === 'sacerdocio' && v3 === 'santa') {
+        document.getElementById('resultado').innerText = '¡Correcto! 🎉';
+    } else {
+        document.getElementById('resultado').innerText = 'Inténtalo otra vez 😊';
+    }
+}
+
+const gridLetters = [
+    ['A','M','O','R','X','Y'],
+    ['D','I','O','S','A','B'],
+    ['H','I','J','O','C','D'],
+    ['E','F','G','H','I','J'],
+    ['K','L','M','N','O','P'],
+    ['Q','R','S','T','U','V']
+];
+
+const sopa = document.getElementById('sopa');
+
+gridLetters.forEach(row => {
+    row.forEach(letter => {
+        let div = document.createElement('div');
+        div.className = 'cell';
+        div.innerText = letter;
+        div.onclick = () => div.classList.toggle('selected');
+        sopa.appendChild(div);
+    });
+});
+
+const palabras = ['AMADO','AMADO','PERDONADO','PERDONADO','HIJO','HIJO','TEMPLO','TEMPLO'];
+let seleccionadas = [];
+
+function crearTablero(){
+    const board = document.getElementById('memory');
+    palabras.sort(() => 0.5 - Math.random());
+
+    palabras.forEach((palabra) => {
+        let card = document.createElement('div');
+        card.className = 'card-memory hidden';
+        card.innerText = palabra;
+
+        card.onclick = () => {
+            card.classList.remove('hidden');
+            seleccionadas.push({card, palabra});
+
+            if(seleccionadas.length === 2){
+                setTimeout(() => {
+                    if(seleccionadas[0].palabra !== seleccionadas[1].palabra){
+                        seleccionadas[0].card.classList.add('hidden');
+                        seleccionadas[1].card.classList.add('hidden');
+                    }
+                    seleccionadas = [];
+                }, 800);
+            }
+        };
+
+        board.appendChild(card);
+    });
+}
+
+crearTablero();
+
+const frases = [
+    'SOY AMADO(A)',
+    'SOY PERDONADO(A)',
+    'SOY PUEBLO ADQUIRIDO POR DIOS',
+    'SOY CIUDADANO DEL CIELO',
+    'SOY ÚNICO(A)',
+    'SOY HIJO(A) DE DIOS',
+    'SOY TEMPLO DE DIOS'
+];
+
+function mostrarFrase(){
+    let random = frases[Math.floor(Math.random()*frases.length)];
+    document.getElementById('frase').innerText = random;
+}
+</script>
+
+</body>
+</html>
